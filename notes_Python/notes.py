@@ -22,18 +22,18 @@ def go_to_function(variant):
     while (variant != 0):
         if variant == 1:
             add_note(filename)
-            print('\nданные внесены !', end='')
+            print('\nзаметка сохранена !', end='')
             pause()
         elif variant == 2:
             finder = input_finder('введите дату последнего изменения заметки')
             find_note(filename, finder)
             pause()
         elif variant == 3:
-            for line in read_all_notes(filename):
+            for line in readAllNotes(filename):
                 print(*line, end='')
             pause()              
         elif variant == 4:
-            for line in read_all_notes(filename):
+            for line in readAllNotes(filename):
                 print(*line, end='')
             finder = input_finder('\n\nкакую заметку вы ходите изменить?\nВведите дату её создания/изменения')
             redact_note(filename, finder)
@@ -62,33 +62,33 @@ def add_note(filename, line = []):
 def input_finder(message):
     '''Функция запроса данных от пользователя
     '''
-    answer = input(f'\n{message} > ').title()
+    answer = input(f'\n{message} > ')
     print('\n')
     return answer
 
 def find_note(filename, find_param):
-    '''Функция поиска строки данных по запросу пользователя
+    '''Функция поиска заметки по дате изменения/создания
     '''
-    phone_list = read_all_notes(filename)
-    find_list = []
-    for line in phone_list:
+    allNotesRows = readAllNotes(filename)
+    findList = []
+    for line in allNotesRows:
         if find_param in line:
-            find_list.append(line)
-    if len(find_list) == 0: print('нет данных!')
+            findList.append(line)
+    if len(findList) == 0: print('нет данных!')
     else: 
-        find_list.insert(0, fields)
-        for line in find_list:
+        findList.insert(0, fields)
+        for line in findList:
             print(*line, end='')
-        return find_list
+        return findList
 
-def read_all_notes(filename):
+def readAllNotes(filename):
     '''Функция импорта заметок из файла
     '''
-    phone_list = [fields]
+    allNotesRows = [fields]
     with open(filename, 'r', encoding='utf-8') as file:
         for line in file:
-            phone_list.append(line.split(';'))
-    return phone_list
+            allNotesRows.append(line.split(';'))
+    return allNotesRows
 
 def write_note(filename, phone_dict):
     '''Функция экспорта заметок в файл
@@ -100,7 +100,7 @@ def write_note(filename, phone_dict):
 def redact_note(filename, find_param):
     '''Функция изменения заметки
     '''
-    list_word = ["ID", "Заголовок", "Тело_заметки", "Дата_время"]
+    list_word = ["ID", "Дата_время", "Заголовок", "Тело_заметки"]
     print('какие старые данные необходимо изменить:')
     for word in list_word:
         print(f'{list_word.index(word) + 1} - {word}')
@@ -110,7 +110,7 @@ def redact_note(filename, find_param):
         if 1 <= ind <= 4:
             new_data = input(f'Теперь новое значение - введите {list_word[ind-1]} > ').title()
             flag = False # Проверка наличия искомого абонента
-            phone_book = read_all_notes(filename)[1:]
+            phone_book = readAllNotes(filename)[1:]
             for line in phone_book:
                 if find_param in line:
                     flag = True
@@ -125,17 +125,15 @@ def redact_note(filename, find_param):
 def delete_note(filename, find_param):
     '''Функция удаления заметки из файла
     '''
-    phone_book = read_all_notes(filename)[1:]
+    phone_book = readAllNotes(filename)[1:]
     for line in phone_book:
         if find_param in line:
             print(*line)
             phone_book.remove(line)
     write_note(filename, phone_book)
 
-
-
-
-
 filename = './notes_Python/notes.csv'
-fields = ["ID", "Заголовок", "Тело_заметки", "Дата_время\n\n"]
+fields = ["ID", "Дата_время", "Заголовок", "Тело_заметки\n\n"]
 go_to_function(show_menu())
+os.system('clear')
+print("Работа программы завершена")
