@@ -17,7 +17,7 @@ def showMenu():
     if choice.isdigit(): return int(choice)
     return showMenu()
 
-def go_to_function(variant):
+def startProgram(variant):
     '''Функция адресации выполнения задач
     '''
     while (variant != 0):
@@ -40,11 +40,14 @@ def go_to_function(variant):
             redactNote(filename, finder)
             pause()
         elif variant == 5:
-            finder = inputFinder('введите фамилию или имя абонента')
-            deleteNote(filename, finder)
-            print('\nданные удалены !', end='')
+            finder = inputFinder('Введите дату создания/изменения заметки, которую вы ходите удалить')
+            if len(findNote(filename, finder)) != 0:
+                deleteNote(filename, finder)
+                print('\nданные удалены !', end='')
             pause()
         variant = showMenu()
+    os.system('clear')
+    print("Работа программы завершена")
 
 def pause():
     '''Функция ожидания нажатия клавиши пользователем
@@ -57,11 +60,12 @@ def addNote(filename, line = []):
     print('введите следующие данные для записи в справочник:')
     for item in fields:
         if item == "Дата_время": line.append(currentDateTime())
+        elif item == "Заголовок": line.append(input(f'\n{item.strip()} > ').upper())
         else: line.append(input(f'\n{item.strip()} > '))
     with open(filename, 'a', encoding='utf-8') as file:
         file.write(f'{";".join(line)}\n')
 
-def inputFinder(message):
+def inputFinder(message) -> str:
     '''Функция запроса данных от пользователя
     '''
     answer = input(f'\n{message} > ')
@@ -83,7 +87,7 @@ def findNote(filename, findParameter) -> list:
             print(*row, end='')
     return findList
 
-def readAllNotes(filename):
+def readAllNotes(filename) -> list:
     '''Функция импорта заметок из файла
     '''
     allNotesRows = [fields]
@@ -92,12 +96,12 @@ def readAllNotes(filename):
             allNotesRows.append(row.split(';'))
     return allNotesRows
 
-def writeNote(filename, phone_dict):
+def writeNote(filename, noteBook):
     '''Функция экспорта заметок в файл
     '''
     with open(filename, 'w', encoding='utf-8') as file:
-        for line in phone_dict:
-            file.write(";".join(line))
+        for row in noteBook:
+            file.write(";".join(row))
 
 def redactNote(filename, findParameter):
     '''Функция изменения заметки
@@ -110,21 +114,21 @@ def redactNote(filename, findParameter):
         for row in noteBook:
             if findParameter in row:
                 row[1] = currentDateTime()
-                row[2] = headerNewNote
+                row[2] = headerNewNote.upper()
                 row[3] = bodyNewNote + "\n"
                 print(*row)
-            writeNote(filename, noteBook)
-            print('\nизменения внесены !', end='')
+                writeNote(filename, noteBook)
+                print('\nизменения внесены !', end='')
 
-def deleteNote(filename, find_param):
+def deleteNote(filename, findParameter):
     '''Функция удаления заметки из файла
     '''
-    phone_book = readAllNotes(filename)[1:]
-    for line in phone_book:
-        if find_param in line:
-            print(*line)
-            phone_book.remove(line)
-    writeNote(filename, phone_book)
+    noteBook = readAllNotes(filename)[1:]
+    for row in noteBook:
+        if findParameter in row:
+            print(*row)
+            noteBook.remove(row)
+    writeNote(filename, noteBook)
 
 def currentDateTime() -> str:
     current = datetime.now()
@@ -137,6 +141,4 @@ def currentDateTime() -> str:
 
 filename = './notes_Python/notes.csv'
 fields = ["ID", "Дата_время", "Заголовок", "Тело_заметки\n\n"]
-go_to_function(showMenu())
-os.system('clear')
-print("Работа программы завершена")
+startProgram(showMenu())
