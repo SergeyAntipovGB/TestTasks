@@ -1,4 +1,5 @@
 import os
+from datetime import datetime
 
 def showMenu():
     '''Функция меню
@@ -74,7 +75,7 @@ def findNote(filename, findParameter) -> list:
     for row in allNotesRows:
         if findParameter in row:
             findList.append(row)
-    if len(findList) == 0: print('нет записки с указанной датой!')
+    if len(findList) == 0: print('Вы ввели неверное значение, либо нет записки с указанной датой!')
     else: 
         findList.insert(0, fields)
         for row in findList:
@@ -103,18 +104,16 @@ def redactNote(filename, findParameter):
     findRow = findNote(filename, findParameter)
     if len(findRow) != 0: 
         headerNewNote = input(f'Введите новый заголовок > ')
-        flag = False # Проверка наличия искомого абонента
+        bodyNewNote = input(f'Введите новый текст заметки > ')
         noteBook = readAllNotes(filename)[1:]
-        for line in noteBook:
-            if findParameter in line:
-                flag = True
-                line[2] = headerNewNote
-                print(*line)
-            if flag:
-                writeNote(filename, noteBook)
-                print('\nизменения внесены !', end='')
-                return
-    print("Вы ввели неверное значение!", end='')
+        for row in noteBook:
+            if findParameter in row:
+                row[1] = currentDateTime()
+                row[2] = headerNewNote
+                row[3] = bodyNewNote + "\n"
+                print(*row)
+            writeNote(filename, noteBook)
+            print('\nизменения внесены !', end='')
 
 def deleteNote(filename, find_param):
     '''Функция удаления заметки из файла
@@ -125,6 +124,15 @@ def deleteNote(filename, find_param):
             print(*line)
             phone_book.remove(line)
     writeNote(filename, phone_book)
+
+def currentDateTime() -> str:
+    current = datetime.now()
+    day = str(current.day)
+    month = str(current.month)
+    year = str(current.year)
+    hour = str(current.hour)
+    minute = str(current.minute)
+    return day + "." + month + "." + year + " " + hour + ":" + minute
 
 filename = './notes_Python/notes.csv'
 fields = ["ID", "Дата_время", "Заголовок", "Тело_заметки\n\n"]
