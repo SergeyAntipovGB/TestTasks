@@ -15,3 +15,24 @@ def show_menu():
     choice = input('> ')
     if choice.isdigit(): return int(choice)
     return show_menu()
+
+def go_to_function(variant):
+    '''Функция адресации выполнения задач
+    '''
+    while (variant != 0):
+        if variant == 1:
+
+            pause()
+        elif variant == 2:
+
+            pause()
+        elif variant == 3:
+
+            pause()              
+        elif variant == 4:
+
+            pause()
+        elif variant == 5:
+
+            pause()
+        variant = show_menu()
