@@ -56,7 +56,8 @@ def addNote(filename, line = []):
     '''
     print('введите следующие данные для записи в справочник:')
     for item in fields:
-        line.append(input(f'\n{item.strip()} > '))
+        if item == "Дата_время": line.append(currentDateTime())
+        else: line.append(input(f'\n{item.strip()} > '))
     with open(filename, 'a', encoding='utf-8') as file:
         file.write(f'{";".join(line)}\n')
 
