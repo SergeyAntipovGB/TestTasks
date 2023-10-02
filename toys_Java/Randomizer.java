@@ -4,7 +4,7 @@ import java.util.Random;
 
 public class Randomizer {
     private int[] variants;
-    private Random nextRandom;
+    private Random nextRandom = new Random();
 
     public int getVariant(int index) {
         return variants[index];
