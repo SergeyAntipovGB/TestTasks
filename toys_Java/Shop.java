@@ -23,6 +23,7 @@ class Shop {
         System.out.println(randomId());
         System.out.println(randomId());
         System.out.println(randomId());
+        System.out.println(toysMap);
             
     }
     
@@ -39,6 +40,15 @@ class Shop {
         
     }
     
+    static void weightRedact() {
+        for (Toys itemToys : toysMap.values()) {
+            System.out.println("вероятность выпадения игрушек следующая:\n");
+            System.out.printf("'%s' - %d%%\n", itemToys.getName(), itemToys.getWeight());
+            System.out.println("Как вы хотите изменить соотношение?\n");
+            
+        }
+    }
+
     /** формирование списка вариантов для случайной генерации
      * с заданным шансом выпадения
      */
