@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
+import java.util.Scanner;
 
 class Shop {
     static Map<Integer,Toys> toysMap = new HashMap<Integer,Toys>();
@@ -45,7 +46,7 @@ class Shop {
             System.out.println("вероятность выпадения игрушек следующая:\n");
             System.out.printf("'%s' - %d%%\n", itemToys.getName(), itemToys.getWeight());
             System.out.println("Как вы хотите изменить соотношение?\n");
-            
+
         }
     }
 
@@ -78,5 +79,39 @@ class Shop {
             shopQueue.offer(drawingId);
         }
         return drawingId;
+    }
+
+    static void menu() {
+
+        System.out.println("Введите номера искомых критериев через пробел:");
+        System.out.println("ОЗУ (в Мбайтах)      - 1");
+        System.out.println("бъем ЖД (в Гбайтах)  - 2");
+        System.out.println("Операционная система - 3");
+        System.out.println("Цвет                 - 4\n");
+        Scanner in = new Scanner(System.in);
+        String[] inputCriteria = in.nextLine().split(" ");
+        int[] arrayCriteria = new int[5];
+        for (String s: inputCriteria) {
+            int i = Integer.parseInt(s);
+            arrayCriteria[i] = i;
+        }
+        Notebook criteria = new Notebook();
+        for (int i = 1; i < arrayCriteria.length; i++) {
+            if (arrayCriteria[i] == 1){
+                System.out.print("Введите целое значение ОЗУ в Мбайтах > ");
+                criteria.setRam(in.nextInt());
+            }else if (arrayCriteria[i] == 2){
+                System.out.print("Введите целое значение объема ЖД в Гбайтах > ");
+                criteria.setHdd(in.nextInt());
+            }else if (arrayCriteria[i] == 3){
+                System.out.print("Введите ОС (windows,linux,mac-os) > ");
+                criteria.setOs(in.next());
+            }else if (arrayCriteria[i] == 4){
+                System.out.print("Введите цвет (white,black,silver,pink) > ");
+                criteria.setColor(in.next());
+            }
+            criteriaMap.put(i, criteria);
+        }
+        in.close();
     }
 }
