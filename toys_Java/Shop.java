@@ -12,14 +12,6 @@ class Shop {
     static Randomizer rnd = new Randomizer();
 
     public static void main(String[] args) {
-        // Scanner in = new Scanner(System.in);
-        // toysAdder();//временно, до включения 1 пункта меню
-        System.out.println(toysMap);
-        // listForRandom(); //временно, до включения 3 пункта меню
-
-        // for (int i = 0; i < 100; i++) {
-        //     System.out.printf("rnd[%d] -> %d\t", i, rnd.getVariant(i));
-        // }
         
         int choiseNumber = 0;
         while (choiseNumber != 5) {
@@ -27,11 +19,12 @@ class Shop {
             if (choiseNumber == 1) {
                 toysAdder();
             }else if (choiseNumber == 2) {
-                weightRedact();
+                changeWeights();
             }else if (choiseNumber == 3) {
                 listForRandom();
-                randomId();//изменить процедуру на void
+                randomId();
             }else if (choiseNumber == 4) {
+                
             }else if (choiseNumber == 5) {
                 System.out.println("Работа программы завершена!");
                 try {
@@ -49,19 +42,14 @@ class Shop {
             }
         }
         
-        
-
-
-
         System.out.println(toysMap);
-        // in.close();    
     }
 
     /** Опрашивает пользователя для выбора пункта меню
      * @return int число - пункт меню
      */
     static int menuQuestions() {
-        System.out.printf("добавить новые игрушки    - 1\n"
+        System.out.printf("\nдобавить новые игрушки    - 1\n"
                             + "изменить вес игрушек      - 2\n"
                             + "провести розыгрыш игрушек - 3\n"
                             + "выдать игрушку получателю - 4\n"
@@ -127,17 +115,30 @@ class Shop {
         return resultWeight;
     }
 
-    /** Изменение веса (вероятности выпадения игрушки)
+    /** Выводит текущие весы и просит пользователя ввести новый
+     * вес (вероятность) каждой игрушки.
      */
-    static void weightRedact() {
-        System.out.println("вероятность выпадения игрушек следующая:");
+    static void changeWeights() {
+        Scanner in = new Scanner(System.in);
+        int startWeight = countWeights(0);
+        System.out.println("Вероятность выпадения игрушек следующая:");
         for (Toys itemToys : toysMap.values()) {
             System.out.printf("'%s' - %d%%\n", itemToys.getName(), itemToys.getWeight());
-            
         }
-        System.out.println("Как вы хотите изменить соотношение?\n");
-
-
+        System.out.printf("сумма равна = %d, а необходимо 100!\n", startWeight);
+        int newWeight = 0;
+        for (Toys itemToys : toysMap.values()) {
+            System.out.printf("Введите вес %s > ", itemToys.getName());
+            try {
+                newWeight = in.nextInt();
+            } catch (Exception e) {
+                System.out.println("Exception: Ошибка ввода целого числа!");
+            }
+            itemToys.setWeight(newWeight);
+        }
+        if (countWeights(0) != 100) {
+            System.out.println("Сумма вероятностей всех игрушек должна быть равна 100! Измените вес игрушек!");
+        }
     }
 
     /** формирование списка вариантов для случайной генерации
@@ -158,7 +159,7 @@ class Shop {
     /** проверка остатка игрушек и помещение случайной
      * игрушки в очередь 
      */
-    static int randomId() {
+    static void randomId() {
         int drawingId = rnd.nextId();
         Toys tempToy = toysMap.get(drawingId);
         if (tempToy.getQuantity() == 0) {
@@ -168,7 +169,6 @@ class Shop {
             toysMap.put(drawingId, tempToy);
             shopQueue.offer(drawingId);
         }
-        return drawingId;
     }
 
     // static void menu() {
